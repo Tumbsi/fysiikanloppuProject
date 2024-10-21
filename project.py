@@ -8,8 +8,8 @@ import folium
 from streamlit_folium import st_folium
 
 
-accel_data = pd.read_csv('Linear Acceleration.csv')
-gps_data = pd.read_csv('Location.csv')
+accel_data = pd.read_csv("https://raw.githubusercontent.com/Tumbsi/fysiikanloppuProject/refs/heads/main/Linear%20Acceleration.csv")
+gps_data = pd.read_csv("https://raw.githubusercontent.com/Tumbsi/fysiikanloppuProject/refs/heads/main/Location.csv")
 
 st.write(f" Default values that gives the most accurate results are: Order = 3, Cutoff = 1.4 & Nyquist = ~21.25")
 
