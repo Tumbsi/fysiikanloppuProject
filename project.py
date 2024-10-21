@@ -135,7 +135,7 @@ st.subheader("About the Results")
 st.write(f"Total distance roughly actually walked: ~350m")
 st.write(f"My assesment is that the calculations are very accurate for the data taken.")
 from PIL import Image
-image = Image.open('https://github.com/Tumbsi/fysiikanloppuProject/blob/main/actualtravel.png')
+image = Image.open("https://github.com/Tumbsi/fysiikanloppuProject/blob/5ea374d291475288af8786ca89c96e2e8183d8ce/actualtravel.png")
 st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
 st.write(f"Conclution is that my phone is on its last straw, this is the best it can do.")
 st.write(f"My walk was brisk and I was walking at a steady pace.")
