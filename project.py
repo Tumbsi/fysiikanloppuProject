@@ -9,7 +9,7 @@ from streamlit_folium import st_folium
 
 
 accel_data = pd.read_csv("https://raw.githubusercontent.com/Tumbsi/fysiikanloppuProject/refs/heads/main/Linear%20Acceleration.csv")
-gps_data = pd.read_csv("https://raw.githubusercontent.com/Tumbsi/fysiikanloppuProject/refs/heads/main/Location.csv")
+gps = pd.read_csv("https://raw.githubusercontent.com/Tumbsi/fysiikanloppuProject/refs/heads/main/Location.csv")
 
 st.write(f" Default values that gives the most accurate results are: Order = 3, Cutoff = 1.4 & Nyquist = ~21.25")
 
@@ -18,7 +18,7 @@ idle_time = 100  # seconds
 
 # Remove the first 100 seconds of data
 accel_data = accel_data[accel_data['Time (s)'] > idle_time].reset_index(drop=True)
-gps_data = gps_data[gps_data['Time (s)'] > idle_time].reset_index(drop=True)
+gps = gps[gps['Time (s)'] > idle_time].reset_index(drop=True)
 
 # Streamlit sliders for order and cutoff
 #order = st.slider("Select order value", 1, 10, value=8)  
@@ -67,7 +67,7 @@ chart_data_accel = pd.DataFrame({
 })
 
 # GPS data analysis
-gps_data['coords'] = gps_data.apply(lambda row: (row['Latitude (°)'], row['Longitude (°)']), axis=1)
+gps['coords'] = gps.apply(lambda row: (row['Latitude (°)'], row['Longitude (°)']), axis=1)
 #distances = [geodesic(gps_data['coords'].iloc[i], gps_data['coords'].iloc[i+1]).meters for i in range(len(gps_data)-1)]
 
 R = 6371000
@@ -78,7 +78,7 @@ totalDist = df['Distance (m)'].sum()
 
 
 total_distance = totalDist
-total_time = (gps_data['Time (s)'].iloc[-1] - gps_data['Time (s)'].iloc[0])  # in seconds
+total_time = (gps['Time (s)'].iloc[-1] - gps['Time (s)'].iloc[0])  # in seconds
 average_speed = total_distance / total_time  # in meters per second
 
 # Step length calculation
@@ -104,7 +104,7 @@ st.line_chart(chart_data_psd, x='freq', y='psd', y_label='Teho', x_label='Taajuu
 
 # Route on map using Folium
 st.subheader("Route on Map")
-df = gps_data[['Latitude (°)', 'Longitude (°)', 'Horizontal Accuracy (m)', 'Vertical Accuracy (m)']].copy()
+df = gps[['Latitude (°)', 'Longitude (°)', 'Horizontal Accuracy (m)', 'Vertical Accuracy (m)']].copy()
 lat_mean = df['Latitude (°)'].mean()
 long_mean = df['Longitude (°)'].mean()
 mymap = folium.Map(location=[lat_mean, long_mean], zoom_start=14)
