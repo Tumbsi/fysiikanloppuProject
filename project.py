@@ -73,8 +73,8 @@ gps['coords'] = gps.apply(lambda row: (row['Latitude (°)'], row['Longitude (°)
 R = 6371000
 a = np.sin(np.radians(gps['Latitude (°)']).diff() / 2)**2 + np.cos(np.radians(gps['Latitude (°)'])) * np.cos(np.radians(gps['Latitude (°)']).shift()) * np.sin(np.radians(gps["Longitude (°)"]).diff() / 2)**2
 c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
-df['Distance (m)'] = R * c
-totalDist = df['Distance (m)'].sum()
+gps['Distance (m)'] = R * c
+totalDist = accel_data['Distance (m)'].sum()
 
 
 total_distance = totalDist
