@@ -134,8 +134,24 @@ colInfo = st.columns(2)
 st.subheader("About the Results")
 st.write(f"Total distance roughly actually walked: ~350m")
 st.write(f"My assesment is that the calculations are very accurate for the data taken.")
+
+import requests
 from PIL import Image
-image = Image.open("https://github.com/Tumbsi/fysiikanloppuProject/blob/5ea374d291475288af8786ca89c96e2e8183d8ce/actualtravel.png")
+from io import BytesIO
+
+
+# Fetch the image from the URL
+url = "https://github.com/Tumbsi/fysiikanloppuProject/blob/5ea374d291475288af8786ca89c96e2e8183d8ce/actualtravel.png?raw=true"
+response = requests.get(url)
+
+# Open the image using PIL
+image = Image.open(BytesIO(response.content))
+
+# Display the image with Streamlit
+st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
+
+
+
 st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
 st.write(f"Conclution is that my phone is on its last straw, this is the best it can do.")
 st.write(f"My walk was brisk and I was walking at a steady pace.")
