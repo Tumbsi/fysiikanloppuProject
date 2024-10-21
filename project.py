@@ -148,7 +148,7 @@ response = requests.get(url)
 image = Image.open(BytesIO(response.content))
 
 # Display the image with Streamlit
-st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
+#st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
 
 
 
