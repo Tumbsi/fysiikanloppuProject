@@ -29,7 +29,7 @@ cutoff = st.slider("Cutoff value", 0.3 , 10.0, value = 1.4)
 
 # lowpass filter
 def butter_lowpass_filter(data, cutoff, fs, order):
-    nyquist = st.slider("Nyquist frequency", fs/0.5, fs/5, fs/2)
+    nyquist = fs / 2
     normal_cutoff = cutoff / nyquist
     b, a = butter(order, normal_cutoff, btype='low', analog=False)
     y = filtfilt(b, a, data)
@@ -41,8 +41,9 @@ fs = 50
 accel_data['filtered'] = butter_lowpass_filter(accel_data['Linear Acceleration y (m/s^2)'], cutoff, fs, order)
 
 # Step count from filtered data using peak detection
-positive_peaks, _ = find_peaks(accel_data['filtered'], height=0.5, distance=fs*0.5)  # Positive peaks
-negative_peaks, _ = find_peaks(-accel_data['filtered'], height=0.5, distance=fs*0.5)  # Negative peaks
+positive_peaks, _ = find_peaks(accel_data['filtered'], height=np.mean(accel_data['filtered']) + 0.5, distance=fs*0.5)
+negative_peaks, _ = find_peaks(-accel_data['filtered'], height=np.mean(-accel_data['filtered']) + 0.5, distance=fs*0.5)
+
 step_count_filtered = len(positive_peaks) + len(negative_peaks)
 
 # Fourier analysis on filtered data
@@ -68,7 +69,8 @@ chart_data_accel = pd.DataFrame({
 
 # GPS data analysis
 gps['coords'] = gps.apply(lambda row: (row['Latitude (°)'], row['Longitude (°)']), axis=1)
-#distances = [geodesic(gps_data['coords'].iloc[i], gps_data['coords'].iloc[i+1]).meters for i in range(len(gps_data)-1)]
+gps = gps[gps['Horizontal Accuracy (m)'] < 20]  # Keep points with accuracy < 20 meters
+
 
 R = 6371000
 a = np.sin(np.radians(gps['Latitude (°)']).diff() / 2)**2 + np.cos(np.radians(gps['Latitude (°)'])) * np.cos(np.radians(gps['Latitude (°)']).shift()) * np.sin(np.radians(gps["Longitude (°)"]).diff() / 2)**2
