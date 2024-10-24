@@ -91,7 +91,7 @@ st.line_chart(chart_data_accel, x='Time (s)', y=['Raw Acceleration', 'Filtered A
 st.subheader("Power Spectral Density")
 st.line_chart(chart_data_psd, x='freq', y='psd', y_label='Power', x_label='Frequency [Hz]')
 
-# GPS route on map with results and image on the side
+# GPS route on map with results side by side
 col1, col2 = st.columns([2, 1])
 
 with col1:
@@ -116,15 +116,16 @@ with col2:
     st.write(f"Total distance: {total_distance:.2f} m")
     st.write(f"Step length: {step_length:.2f} m")
 
-    # Fetch and display the image in the same column
-    url = "https://github.com/Tumbsi/fysiikanloppuProject/blob/5ea374d291475288af8786ca89c96e2e8183d8ce/actualtravel.png?raw=true"
-    response = requests.get(url)
-    image = Image.open(BytesIO(response.content))
-    st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
-
     # "About the Results" section
     st.subheader("About the Results")
     st.write(f"Total distance roughly actually walked: ~350m")
     st.write(f"My assessment is that the calculations are very accurate for the data taken.")
     st.write(f"Conclusion is that my phone is on its last straw, this is the best it can do.")
     st.write(f"My walk was brisk and I was walking at a steady pace, so I believe the average speed and step length are accurate!")
+
+# Image section below the columns to prevent shrinking
+st.subheader("Real Path Taken")
+url = "https://github.com/Tumbsi/fysiikanloppuProject/blob/5ea374d291475288af8786ca89c96e2e8183d8ce/actualtravel.png?raw=true"
+response = requests.get(url)
+image = Image.open(BytesIO(response.content))
+st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
