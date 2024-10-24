@@ -11,7 +11,7 @@ from streamlit_folium import st_folium
 accel_data = pd.read_csv("https://raw.githubusercontent.com/Tumbsi/fysiikanloppuProject/refs/heads/main/Linear%20Acceleration.csv")
 gps = pd.read_csv("https://raw.githubusercontent.com/Tumbsi/fysiikanloppuProject/refs/heads/main/Location.csv")
 
-st.write(f" Default values that gives the most accurate results are: Order = 3, Cutoff = 1.4 & Nyquist = ~21.25")
+st.write(f" Default values that gives the most accurate results are: Order = 10 & Cutoff = ~1.46")
 
 # idle time to be removed
 idle_time = 100  # seconds
@@ -23,8 +23,8 @@ gps = gps[gps['Time (s)'] > idle_time].reset_index(drop=True)
 # Streamlit sliders for order and cutoff
 #order = st.slider("Select order value", 1, 10, value=8)  
 #cutoff = st.slider("Select cutoff value", 0.1, 10.0, value=1.5) 
-order = st.slider("Order value", 1, 10, value=3)
-cutoff = st.slider("Cutoff value", 0.3 , 10.0, value = 1.4)
+order = st.slider("Order value", 1, 10, value=10)
+cutoff = st.slider("Cutoff value", 0.3 , 10.0, value = 1.46)
 
 
 # lowpass filter
