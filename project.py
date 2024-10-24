@@ -107,6 +107,7 @@ st.line_chart(chart_data_psd, x='freq', y='psd', y_label='Teho', x_label='Taajuu
 
 # Route on map using Folium
 st.subheader("Route on Map")
+st.write(f"Unfortunately this is the 'most accurate' calculations that can be done with the gps data ")
 df = gps[['Latitude (°)', 'Longitude (°)', 'Horizontal Accuracy (m)', 'Vertical Accuracy (m)']].copy()
 lat_mean = df['Latitude (°)'].mean()
 long_mean = df['Longitude (°)'].mean()
@@ -131,30 +132,18 @@ with col2:
     st.write(f"Average speed: {average_speed:.2f} m/s")
     st.write(f"Total distance: {total_distance:.2f} m")
     st.write(f"Step length: {step_length:.2f} m")
-
-colInfo = st.columns(2)
-st.subheader("About the Results")
-st.write(f"Total distance roughly actually walked: ~350m")
-st.write(f"My assesment is that the calculations are very accurate for the data taken.")
-
-import requests
-from PIL import Image
-from io import BytesIO
-
-
-# Fetch the image from the URL
+    
+    # Add "About the Results" in the same column as the Results
+    st.subheader("About the Results")
+    st.write(f"Total distance roughly actually walked: ~350m")
+    st.write(f"My assessment is that the calculations are very accurate for the data taken.")
+    
+# Fetch and display the image
 url = "https://github.com/Tumbsi/fysiikanloppuProject/blob/5ea374d291475288af8786ca89c96e2e8183d8ce/actualtravel.png?raw=true"
 response = requests.get(url)
-
-# Open the image using PIL
 image = Image.open(BytesIO(response.content))
-
-# Display the image with Streamlit
-#st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
-
-
-
 st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
-st.write(f"Conclution is that my phone is on its last straw, this is the best it can do.")
+
+st.write(f"Conclusion is that my phone is on its last straw, this is the best it can do.")
 st.write(f"My walk was brisk and I was walking at a steady pace.")
 st.write(f"Therefore, I believe that the average speed, and step length are accurate!")
