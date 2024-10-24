@@ -116,21 +116,16 @@ with col2:
     st.write(f"Total distance: {total_distance:.2f} m")
     st.write(f"Step length: {step_length:.2f} m")
 
-    # "About the Results" section
+    # Headline for "My assessment"
+    st.subheader("My Assessment")
     st.write(f"Total distance roughly actually walked: ~350m")
     st.write(f"My assessment is that the calculations are very accurate for the data taken.")
     st.write(f"Conclusion is that my phone is on its last straw, this is the best it can do.")
     st.write(f"My walk was brisk and I was walking at a steady pace, so I believe the average speed and step length are accurate!")
 
-# Remove padding between sections using markdown CSS
-st.markdown("""
-    <style>
-    .css-1d391kg { padding: 0; margin: 0; }
-    </style>
-""", unsafe_allow_html=True)
-
-# Image section directly below the results
+# Image section directly below the results with explicit markdown spacing to avoid extra gaps
 url = "https://github.com/Tumbsi/fysiikanloppuProject/blob/5ea374d291475288af8786ca89c96e2e8183d8ce/actualtravel.png?raw=true"
 response = requests.get(url)
 image = Image.open(BytesIO(response.content))
+st.markdown("<hr>", unsafe_allow_html=True)  # Use horizontal line to separate content
 st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
