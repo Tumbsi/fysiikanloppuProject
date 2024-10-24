@@ -13,8 +13,6 @@ from io import BytesIO
 accel_data = pd.read_csv("https://raw.githubusercontent.com/Tumbsi/fysiikanloppuProject/refs/heads/main/Linear%20Acceleration.csv")
 gps = pd.read_csv("https://raw.githubusercontent.com/Tumbsi/fysiikanloppuProject/refs/heads/main/Location.csv")
 
-st.write(f" Default values that gives the most accurate results are: Order = 10 & Cutoff = ~1.46")
-
 # Remove idle time from the data
 idle_time = 100  # seconds
 accel_data = accel_data[accel_data['Time (s)'] > idle_time].reset_index(drop=True)
@@ -41,25 +39,6 @@ positive_peaks, _ = find_peaks(accel_data['filtered'], height=np.mean(accel_data
 negative_peaks, _ = find_peaks(-accel_data['filtered'], height=np.mean(-accel_data['filtered']) + 0.5, distance=fs * 0.5)
 step_count_filtered = len(positive_peaks) + len(negative_peaks)
 
-# Fourier analysis
-time = accel_data["Time (s)"].values
-signal = accel_data["filtered"].values
-N = len(signal)
-T = time[1] - time[0]
-fs = 1 / T
-fourier = np.fft.fft(signal, N)
-psd = fourier * np.conj(fourier) / N
-freq = np.fft.fftfreq(N, T)
-L = np.arange(1, int(N/2))
-
-# DataFrames for plotting
-chart_data_psd = pd.DataFrame(np.transpose(np.array([freq[L], psd[L].real])), columns=["freq", "psd"])
-chart_data_accel = pd.DataFrame({
-    'Time (s)': accel_data['Time (s)'],
-    'Raw Acceleration': accel_data['Linear Acceleration y (m/s^2)'],
-    'Filtered Acceleration': accel_data['filtered']
-})
-
 # GPS data processing
 gps['coords'] = gps.apply(lambda row: (row['Latitude (°)'], row['Longitude (°)']), axis=1)
 gps = gps[gps['Horizontal Accuracy (m)'] < 30]  # Filter GPS points with accuracy < 30 meters
@@ -76,20 +55,31 @@ average_speed = total_distance / total_time  # meters per second
 # Step length calculation
 step_length = total_distance / step_count_filtered if step_count_filtered > 0 else 0
 
-# Calculate step count using Fourier transform
-dominant_freq = freq[L][np.argmax(psd[L].real)]
-step_count_fourier = dominant_freq * total_time
+# Add custom CSS to control layout and reduce padding
+st.markdown("""
+    <style>
+        .section-header {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .section-content {
+            margin-top: 0;
+            padding-top: 0;
+        }
+        .map-section {
+            margin-bottom: 10px; /* Reduce space after the map */
+        }
+        .results-section {
+            margin-top: -10px; /* Reduce space between map and results */
+        }
+        .assessment-section {
+            margin-top: -15px; /* Reduce space between results and assessment */
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Streamlit app layout
 st.title("Acceleration and GPS Data Analysis")
-
-# Charts for raw and filtered acceleration data
-st.subheader("Raw and Filtered Acceleration Data (y-axis)")
-st.line_chart(chart_data_accel, x='Time (s)', y=['Raw Acceleration', 'Filtered Acceleration'])
-
-# Power spectral density
-st.subheader("Power Spectral Density")
-st.line_chart(chart_data_psd, x='freq', y='psd', y_label='Power', x_label='Frequency [Hz]')
 
 # GPS route on map with results directly below
 st.subheader("Route on Map")
@@ -106,15 +96,15 @@ for i in range(len(df) - 1):
 st_folium(mymap, width=700, height=500)
 
 # Display results directly below the map
-st.subheader("Results")
-st.write(f"Step count (filtered): {step_count_filtered}")
+st.subheader("Results", class_="section-header")
+st.write(f"Step count (filtered): {step_count_filtered}", class_="section-content")
 st.write(f"Step count (Fourier): {step_count_fourier:.2f}")
 st.write(f"Average speed: {average_speed:.2f} m/s")
 st.write(f"Total distance: {total_distance:.2f} m")
 st.write(f"Step length: {step_length:.2f} m")
 
 # Headline for "My assessment"
-st.subheader("My Assessment")
+st.subheader("My Assessment", class_="section-header assessment-section")
 st.write(f"Total distance roughly actually walked: ~350m")
 st.write(f"My assessment is that the calculations are very accurate for the data taken.")
 st.write(f"Conclusion is that my phone is on its last straw, this is the best it can do.")
