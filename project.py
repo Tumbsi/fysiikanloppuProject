@@ -91,39 +91,36 @@ st.line_chart(chart_data_accel, x='Time (s)', y=['Raw Acceleration', 'Filtered A
 st.subheader("Power Spectral Density")
 st.line_chart(chart_data_psd, x='freq', y='psd', y_label='Power', x_label='Frequency [Hz]')
 
-# GPS route on map with results side by side
-col1, col2 = st.columns([2, 1])
+# GPS route on map with results directly below
+st.subheader("Route on Map")
+lat_mean = gps['Latitude (°)'].mean()
+long_mean = gps['Longitude (°)'].mean()
+mymap = folium.Map(location=[lat_mean, long_mean], zoom_start=14)
 
-with col1:
-    st.subheader("Route on Map")
-    lat_mean = gps['Latitude (°)'].mean()
-    long_mean = gps['Longitude (°)'].mean()
-    mymap = folium.Map(location=[lat_mean, long_mean], zoom_start=14)
-    
-    # Polyline for route
-    df = gps[['Latitude (°)', 'Longitude (°)', 'Horizontal Accuracy (m)', 'Vertical Accuracy (m)']].copy()
-    for i in range(len(df) - 1):
-        start_coords = df.iloc[i][['Latitude (°)', 'Longitude (°)']].values
-        end_coords = df.iloc[i+1][['Latitude (°)', 'Longitude (°)']].values
-        folium.PolyLine([start_coords, end_coords], color='blue', weight=2.5, opacity=1).add_to(mymap)
-    st_folium(mymap, width=700, height=500)
+# Polyline for route
+df = gps[['Latitude (°)', 'Longitude (°)', 'Horizontal Accuracy (m)', 'Vertical Accuracy (m)']].copy()
+for i in range(len(df) - 1):
+    start_coords = df.iloc[i][['Latitude (°)', 'Longitude (°)']].values
+    end_coords = df.iloc[i+1][['Latitude (°)', 'Longitude (°)']].values
+    folium.PolyLine([start_coords, end_coords], color='blue', weight=2.5, opacity=1).add_to(mymap)
+st_folium(mymap, width=700, height=500)
 
-with col2:
-    st.subheader("Results")
-    st.write(f"Step count (filtered): {step_count_filtered}")
-    st.write(f"Step count (Fourier): {step_count_fourier:.2f}")
-    st.write(f"Average speed: {average_speed:.2f} m/s")
-    st.write(f"Total distance: {total_distance:.2f} m")
-    st.write(f"Step length: {step_length:.2f} m")
+# Display results directly below the map
+st.subheader("Results")
+st.write(f"Step count (filtered): {step_count_filtered}")
+st.write(f"Step count (Fourier): {step_count_fourier:.2f}")
+st.write(f"Average speed: {average_speed:.2f} m/s")
+st.write(f"Total distance: {total_distance:.2f} m")
+st.write(f"Step length: {step_length:.2f} m")
 
-    # Headline for "My assessment"
-    st.subheader("My Assessment")
-    st.write(f"Total distance roughly actually walked: ~350m")
-    st.write(f"My assessment is that the calculations are very accurate for the data taken.")
-    st.write(f"Conclusion is that my phone is on its last straw, this is the best it can do.")
-    st.write(f"My walk was brisk and I was walking at a steady pace, so I believe the average speed and step length are accurate!")
+# Headline for "My assessment"
+st.subheader("My Assessment")
+st.write(f"Total distance roughly actually walked: ~350m")
+st.write(f"My assessment is that the calculations are very accurate for the data taken.")
+st.write(f"Conclusion is that my phone is on its last straw, this is the best it can do.")
+st.write(f"My walk was brisk and I was walking at a steady pace, so I believe the average speed and step length are accurate!")
 
-# Image section directly below the results with explicit markdown spacing to avoid extra gaps
+# Image section directly below the assessment
 url = "https://github.com/Tumbsi/fysiikanloppuProject/blob/5ea374d291475288af8786ca89c96e2e8183d8ce/actualtravel.png?raw=true"
 response = requests.get(url)
 image = Image.open(BytesIO(response.content))
