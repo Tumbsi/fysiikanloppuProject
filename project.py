@@ -137,6 +137,11 @@ with col2:
     st.subheader("About the Results")
     st.write(f"Total distance roughly actually walked: ~350m")
     st.write(f"My assessment is that the calculations are very accurate for the data taken.")
+
+
+import requests
+from PIL import Image
+from io import BytesIO
     
 # Fetch and display the image
 url = "https://github.com/Tumbsi/fysiikanloppuProject/blob/5ea374d291475288af8786ca89c96e2e8183d8ce/actualtravel.png?raw=true"
