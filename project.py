@@ -69,7 +69,7 @@ chart_data_accel = pd.DataFrame({
 
 # GPS data analysis
 gps['coords'] = gps.apply(lambda row: (row['Latitude (°)'], row['Longitude (°)']), axis=1)
-gps = gps[gps['Horizontal Accuracy (m)'] < 20]  # Keep points with accuracy < 20 meters
+#gps = gps[gps['Horizontal Accuracy (m)'] < 20]  # Keep points with accuracy < 20 meters
 
 
 R = 6371000
