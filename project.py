@@ -103,7 +103,7 @@ for i in range(len(df) - 1):
     start_coords = df.iloc[i][['Latitude (°)', 'Longitude (°)']].values
     end_coords = df.iloc[i+1][['Latitude (°)', 'Longitude (°)']].values
     folium.PolyLine([start_coords, end_coords], color='blue', weight=2.5, opacity=1).add_to(mymap)
-st_folium(mymap, width=700, height=500)
+st_folium(mymap)
 
 # Display results directly below the map
 st.subheader("Results")
