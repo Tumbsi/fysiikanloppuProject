@@ -91,21 +91,7 @@ st.line_chart(chart_data_accel, x='Time (s)', y=['Raw Acceleration', 'Filtered A
 st.subheader("Power Spectral Density")
 st.line_chart(chart_data_psd, x='freq', y='psd', y_label='Power', x_label='Frequency [Hz]')
 
-# GPS route on map with results directly below
-st.subheader("Route on Map")
-lat_mean = gps['Latitude (°)'].mean()
-long_mean = gps['Longitude (°)'].mean()
-mymap = folium.Map(location=[lat_mean, long_mean], zoom_start=14)
-
-# Polyline for route
-df = gps[['Latitude (°)', 'Longitude (°)', 'Horizontal Accuracy (m)', 'Vertical Accuracy (m)']].copy()
-for i in range(len(df) - 1):
-    start_coords = df.iloc[i][['Latitude (°)', 'Longitude (°)']].values
-    end_coords = df.iloc[i+1][['Latitude (°)', 'Longitude (°)']].values
-    folium.PolyLine([start_coords, end_coords], color='blue', weight=2.5, opacity=1).add_to(mymap)
-st_folium(mymap)
-
-# Display results directly below the map
+# Display results directly below the charts
 st.subheader("Results")
 st.write(f"Step count (filtered): {step_count_filtered}")
 st.write(f"Step count (Fourier): {step_count_fourier:.2f}")
@@ -126,3 +112,17 @@ response = requests.get(url)
 image = Image.open(BytesIO(response.content))
 st.markdown("<hr>", unsafe_allow_html=True)  # Use horizontal line to separate content
 st.image(image, caption='Real path taken, roughly 350m', use_column_width=True)
+
+# GPS route on map at the end
+st.subheader("Route on Map")
+lat_mean = gps['Latitude (°)'].mean()
+long_mean = gps['Longitude (°)'].mean()
+mymap = folium.Map(location=[lat_mean, long_mean], zoom_start=14)
+
+# Polyline for route
+df = gps[['Latitude (°)', 'Longitude (°)', 'Horizontal Accuracy (m)', 'Vertical Accuracy (m)']].copy()
+for i in range(len(df) - 1):
+    start_coords = df.iloc[i][['Latitude (°)', 'Longitude (°)']].values
+    end_coords = df.iloc[i+1][['Latitude (°)', 'Longitude (°)']].values
+    folium.PolyLine([start_coords, end_coords], color='blue', weight=2.5, opacity=1).add_to(mymap)
+st_folium(mymap, width=700, height=500)
